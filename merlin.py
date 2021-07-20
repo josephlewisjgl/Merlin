@@ -7,7 +7,8 @@ class MerlinBot():
     # CONVERSATION
     HELP_TEXT = "Type help to find out what I can do! Type exit to close me."
 
-    HELP_MENU = "I can do lots of cool stuff: \n 1. Type search and a key word and I can find a data source for your query."
+    HELP_MENU = "I can do lots of cool stuff: \n 1. Type search and one or more key word(s) and I can find a data " \
+                "source for your query." \
 
     GREETINGS = [
         "Hello there! My name is MerlinBot and I'm here to help. " + HELP_TEXT,
@@ -26,14 +27,16 @@ class MerlinBot():
             self.output_message(self.HELP_MENU)
 
         elif response.startswith('search'):
-            self.search(response[7:])
+            search_terms = response.split(' ')[1:]
+            self.search(search_terms)
 
         elif response == 'exit':
             self.output_message('Goodbye!')
             exit()
 
         else:
-            self.output_message("Sorry I'm not sure what you need. Could you please try asking again or refer to the help menu for more options by typing 'help'.")
+            self.output_message("Sorry I'm not sure what you need. Could you please try asking again or refer to the "
+                                "help menu for more options by typing 'help'.")
 
     # search function to access the SW API and search based on the search term and iterate results
     def search(self, search_text):
