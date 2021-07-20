@@ -4,4 +4,4 @@ Merlin will be a Chatbot that can take requests from users to search for and ret
 
 At the moment Merlin can:
 
-1. Search for a dataset based on one keyword.
+1. Search for a dataset based on one or more keywords.
