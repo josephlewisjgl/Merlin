@@ -1,4 +1,5 @@
 from statswalespy.search import statswales_search
+from statswalespy.download_data import statswales_get_metadata
 import random
 import pandas as pd
 
@@ -34,6 +35,9 @@ class MerlinBot():
             self.output_message('Goodbye!')
             exit()
 
+        elif response.startswith('describe'):
+            self.describe(response[9:])
+
         else:
             self.output_message("Sorry I'm not sure what you need. Could you please try asking again or refer to the "
                                 "help menu for more options by typing 'help'.")
@@ -50,6 +54,34 @@ class MerlinBot():
 
 
     # data questions
+    def describe(self, cube):
+
+        title = ''
+        last_update = ''
+        desc = ''
+        keywords = ''
+
+        try:
+            md = statswales_get_metadata(cube)
+            title = md[(md['Tag_ENG'] == 'Title')]['Description_ENG'].reset_index()['Description_ENG'][0]
+            last_update = md[(md['Tag_ENG'] == 'Last update')]['Description_ENG'].reset_index()['Description_ENG'][0]
+            desc = md[(md['Tag_ENG'] == 'General description')]['Description_ENG'].reset_index()['Description_ENG'][0]
+            keywords = md[(md['Tag_ENG'] == 'Keywords')]['Description_ENG'].reset_index()['Description_ENG'][0]
+
+        except:
+             self.output_message('Error finding cube description.')
+
+        desc_check = desc.split(' ')
+
+        if len(desc_check) > 5:
+            self.output_message('The cube ' + str(title) + ' was last updated on ' + str(
+                last_update) + '. \nIt holds information on ' + desc + '.')
+
+        else:
+            self.output_message('The cube ' + str(title) + ' was last updated on ' + str(
+                last_update) + '. \n Here are some keywords to describe it: ' + str(keywords))
+
+        return None
 
 if __name__ == '__main__':
     merlin = MerlinBot()
