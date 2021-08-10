@@ -44,6 +44,9 @@ class MerlinBot():
         elif response.startswith('download'):
             self.download_data(response[9:])
 
+        elif response.startswith('list dimensions for'):
+            self.list_dimensions(response[20:])
+
         else:
             self.output_message("Sorry I'm not sure what you need. Could you please try asking again or refer to the "
                                 "help menu for more options by typing 'help'.")
@@ -101,6 +104,17 @@ class MerlinBot():
         df.to_csv(file)
 
         return None
+
+    def list_dimensions(self, cube):
+        df = statswales_get_dataset(cube)
+
+        for col in df:
+            if 'ItemName_ENG' in col:
+                self.output_message(col.split('_')[0])
+
+        return None
+
+    # retrieve logic will be: list dimension options (groupby), ask for what value in each and return data
 
 if __name__ == '__main__':
     merlin = MerlinBot()
