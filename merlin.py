@@ -8,13 +8,13 @@ class MerlinBot():
     # CONVERSATION
     HELP_TEXT = "Type help to find out what I can do! Type exit to close me."
 
-    HELP_MENU = "I can do lots of cool stuff: \n 1. Type search and one or more key word(s) and I can find a data " \
-                "source for your query." \
+    HELP_MENU = "I can do lots of cool stuff: \n 1. Type 'search' and one or more key word(s) and I can find a data" \
+                "source for your query.\n 2. Type 'describe' and I can describe the contents of a data cube." \
 
     GREETINGS = [
-        "Hello there! My name is MerlinBot and I'm here to help. " + HELP_TEXT,
-        "What's up my name is MerlinBot did you have any questions? " + HELP_TEXT,
-        "Nice to meet you I am MerlinBot how can I help you today? " + HELP_TEXT
+        "Hello there! My name is Merlin and I'm here to help. " + HELP_TEXT,
+        "What's up my name is Merlin did you have any questions? " + HELP_TEXT,
+        "Nice to meet you I am Merlin how can I help you today? " + HELP_TEXT
     ]
 
     # output_message prints Merlin's response
@@ -55,7 +55,7 @@ class MerlinBot():
 
     # data questions
     def describe(self, cube):
-
+        # set up variables as blank if no response from API
         title = ''
         last_update = ''
         desc = ''
@@ -73,6 +73,7 @@ class MerlinBot():
 
         desc_check = desc.split(' ')
 
+        # check if there is a description of value if not use keywords
         if len(desc_check) > 5:
             self.output_message('The cube ' + str(title) + ' was last updated on ' + str(
                 last_update) + '. \nIt holds information on ' + desc + '.')
