@@ -18,6 +18,12 @@ Merlin will curate a list of all the cubes that match the key terms searched for
 
 Will return a brief message from Merlin who will describe the cube for you using the metadata provided on StatsWales.
 
+### 3. Download your data for you.
+
+*download econ0074*
+
+Merlin will begin a download process for you on the dataset with the ID provided, there will then be a prompt from Merlin for the file path you would like to store the data under and Merlin will use it to store your data as a .csv file.
+
 ## Extra keywords:
 
 ### To close Merlin:
