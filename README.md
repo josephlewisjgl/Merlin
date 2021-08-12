@@ -24,6 +24,12 @@ Will return a brief message from Merlin who will describe the cube for you using
 
 Merlin will begin a download process for you on the dataset with the ID provided, there will then be a prompt from Merlin for the file path you would like to store the data under and Merlin will use it to store your data as a .csv file.
 
+### 4. Get a piece of data for you.
+
+*get data for econ0074*
+
+Merlin will download a dataset for you to query, you will be prompted to tell Merlin which features you would like to filter and how you would like to filter them before Merlin sums the appropriate data for your query.
+
 ## Extra keywords:
 
 ### To close Merlin:
