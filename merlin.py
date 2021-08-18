@@ -1,9 +1,7 @@
 from statswalespy.search import statswales_search
 from statswalespy.download_data import statswales_get_metadata, statswales_get_dataset
 import random
-import pandas as pd
-from vocab import HELP_MENU, GREETINGS, GOODBYES, MISUNDERSTANDINGS
-
+from mouth.vocab import HELP_MENU, GREETINGS, GOODBYES
 
 
 class MerlinBot():
