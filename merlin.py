@@ -2,24 +2,11 @@ from statswalespy.search import statswales_search
 from statswalespy.download_data import statswales_get_metadata, statswales_get_dataset
 import random
 import pandas as pd
+from vocab import HELP_MENU, GREETINGS, GOODBYES, MISUNDERSTANDINGS
 
 
 
 class MerlinBot():
-    # CONVERSATION
-    HELP_TEXT = "Type help to find out what I can do! Type exit to close me."
-
-    HELP_MENU = "I can do lots of cool stuff: \n 1. Type 'search' and one or more key word(s) and I can find a data" \
-                "source for your query.\n 2. Type 'describe' followed by a cube reference and I can describe the " \
-                "contents of a data cube.\n 3. Type 'download' followed by a cube reference and I will begin " \
-                "downloading data. Once the download is done I will ask for a file path and save the data in that " \
-                "path as a csv file." \
-
-    GREETINGS = [
-        "Hello there! My name is Merlin and I'm here to help. " + HELP_TEXT,
-        "What's up my name is Merlin did you have any questions? " + HELP_TEXT,
-        "Nice to meet you I am Merlin how can I help you today? " + HELP_TEXT
-    ]
 
     EXIT_COMMANDS = ("quit", "goodbye", "exit", "no")
 
@@ -29,39 +16,41 @@ class MerlinBot():
 
     # take_response is the function containing Merlin's response logic
     def take_response(self):
-        self.output_message(random.choice(self.GREETINGS))
+        self.output_message(random.choice(GREETINGS))
         response = input("Response: ").lower()
 
         while not self.exit_func(response):
             if response == 'help':
-                self.output_message(self.HELP_MENU)
+                self.output_message(HELP_MENU)
+                response = input("Response: ").lower()
 
             elif response.startswith('search'):
                 search_terms = response.split(' ')[1:]
                 self.search(search_terms)
-
-            elif response == 'exit':
-                self.output_message('Goodbye!')
-                exit()
+                response = input("Response: ").lower()
 
             elif response.startswith('describe'):
                 self.describe(response[9:])
+                response = input("Response: ").lower()
 
             elif response.startswith('download'):
                 self.download_data(response[9:])
+                response = input("Response: ").lower()
 
             elif response.startswith('get data for'):
                 self.get_data(response[13:])
+                response = input("Response: ").lower()
 
             else:
                 self.output_message("Sorry I'm not sure what you need. Could you please try asking again or refer to the "
                                     "help menu for more options by typing 'help'.")
+                response = input("Response: ").lower()
 
     # exit function
     def exit_func(self, user_message):
         for command in self.EXIT_COMMANDS:
             if command in user_message.lower():
-                self.output_message('Goodbye!')
+                self.output_message(random.choice(GOODBYES))
                 return True
 
     # search function to access the SW API and search based on the search term and iterate results
@@ -172,11 +161,6 @@ class MerlinBot():
                 df = df[df[dimension] == filter]
 
         self.output_message(df.Data.sum())
-
-
-
-
-
 
         return None
 
