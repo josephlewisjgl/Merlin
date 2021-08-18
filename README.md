@@ -36,6 +36,8 @@ Merlin will download a dataset for you to query, you will be prompted to tell Me
 
 *exit*
 
+Other commands also work like 'no', 'goodbye' and more.
+
 ### For more help:
 
 *help*
