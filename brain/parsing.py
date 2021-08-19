@@ -16,7 +16,7 @@ def preprocess(input_sentence):
     input_sentence = re.sub(r'[^\w\s]', '', input_sentence)
     tokens = word_tokenize(input_sentence)
     input_sentence = [i for i in tokens if not i in stop_words]
-    return (input_sentence)
+    return input_sentence
 
 
 def compare_overlap(user_message, possible_response):

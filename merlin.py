@@ -2,6 +2,7 @@ from statswalespy.search import statswales_search
 from statswalespy.download_data import statswales_get_metadata, statswales_get_dataset
 import random
 from mouth.vocab import HELP_MENU, GREETINGS, GOODBYES
+from brain.parsing import preprocess
 
 
 class MerlinBot():
@@ -15,39 +16,39 @@ class MerlinBot():
     # take_response is the function containing Merlin's response logic
     def take_response(self):
         self.output_message(random.choice(GREETINGS))
-        response = input("Response: ").lower()
+        response = preprocess(input("Response: ").lower())
 
         while not self.exit_func(response):
             if response == 'help':
                 self.output_message(HELP_MENU)
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
 
             elif response.startswith('search'):
                 search_terms = response.split(' ')[1:]
                 self.search(search_terms)
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
 
             elif response.startswith('describe'):
                 self.describe(response[9:])
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
 
             elif response.startswith('download'):
                 self.download_data(response[9:])
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
 
             elif response.startswith('get data for'):
                 self.get_data(response[13:])
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
 
             else:
                 self.output_message("Sorry I'm not sure what you need. Could you please try asking again or refer to the "
                                     "help menu for more options by typing 'help'.")
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
 
     # exit function
     def exit_func(self, user_message):
         for command in self.EXIT_COMMANDS:
-            if command in user_message.lower():
+            if command in user_message:
                 self.output_message(random.choice(GOODBYES))
                 return True
 
@@ -158,11 +159,9 @@ class MerlinBot():
                 filter = input('What would you like to filter this column to?')
                 df = df[df[dimension] == filter]
 
-        self.output_message(df.Data.sum())
+        self.output_message('The data you requested is: ' + str(df.Data.sum()))
 
         return None
-
-    # retrieve logic will be: list dimension options (groupby), ask for what value in each and return data
 
 if __name__ == '__main__':
     merlin = MerlinBot()
