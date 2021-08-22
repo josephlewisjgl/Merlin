@@ -1,6 +1,6 @@
 # Merlin
 
-Merlin will be a Chatbot that can take requests from users to search for and retrieve data and information from StatsWales. For now Merlin operates solely as a rule-based bot using strings of text and conditionals but eventually the bot will be generative and use regular expressions.
+Merlin will be a Chatbot that can take requests from users to search for and retrieve data and information from StatsWales. Merlin has begun to learn how to understand users and now you can try and ask questions using your own words, fall back phrases that Merlin definitely understands are below and can be found in the help menu.
 
 ## At the moment Merlin can:
 
