@@ -2,11 +2,11 @@ from statswalespy.search import statswales_search
 from statswalespy.download_data import statswales_get_metadata, statswales_get_dataset
 import random
 from mouth.vocab import HELP_MENU, GREETINGS, GOODBYES
+from brain.parsing import preprocess, find_intent, find_cube_ref
+from ears.comparison_phrases import EXIT_COMMANDS
 
 
 class MerlinBot():
-
-    EXIT_COMMANDS = ("quit", "goodbye", "exit", "no")
 
     # output_message prints Merlin's response
     def output_message(self, message):
@@ -15,41 +15,62 @@ class MerlinBot():
     # take_response is the function containing Merlin's response logic
     def take_response(self):
         self.output_message(random.choice(GREETINGS))
-        response = input("Response: ").lower()
+        response = preprocess(input("Response: ").lower())
+        intent = find_intent(response)
+        print(intent)
 
         while not self.exit_func(response):
-            if response == 'help':
+            if intent == 'help':
                 self.output_message(HELP_MENU)
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
+                intent = find_intent(response)
 
-            elif response.startswith('search'):
+            # check if search is in the response
+            elif intent == 'search':
                 search_terms = response.split(' ')[1:]
                 self.search(search_terms)
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
+                intent = find_intent(response)
 
-            elif response.startswith('describe'):
-                self.describe(response[9:])
-                response = input("Response: ").lower()
+            elif intent == 'describe':
+                cube = self.validate_cubes(response)
+                self.describe(cube)
+                response = preprocess(input("Response: ").lower())
+                intent = find_intent(response)
 
-            elif response.startswith('download'):
-                self.download_data(response[9:])
-                response = input("Response: ").lower()
+            elif intent == 'download':
+                cube = self.validate_cubes(response)
+                self.download_data(cube)
+                response = preprocess(input("Response: ").lower())
+                intent = find_intent(response)
 
-            elif response.startswith('get data for'):
-                self.get_data(response[13:])
-                response = input("Response: ").lower()
+            elif intent == 'retrieve':
+                cube = self.validate_cubes(response)
+                self.get_data(cube)
+                response = preprocess(input("Response: ").lower())
+                intent = find_intent(response)
 
             else:
                 self.output_message("Sorry I'm not sure what you need. Could you please try asking again or refer to the "
                                     "help menu for more options by typing 'help'.")
-                response = input("Response: ").lower()
+                response = preprocess(input("Response: ").lower())
+                intent = find_intent(response)
 
     # exit function
     def exit_func(self, user_message):
-        for command in self.EXIT_COMMANDS:
-            if command in user_message.lower():
+        for command in EXIT_COMMANDS:
+            if command in user_message:
                 self.output_message(random.choice(GOODBYES))
                 return True
+
+    # function to validate and find cube reference
+    def validate_cubes(self, response):
+        cube = find_cube_ref(response)
+        print(cube)
+        if len(cube) > 1:
+            self.output_message('You have input more than one cube reference please stick to one cube at a time.')
+        else:
+            return cube[0][0]
 
     # search function to access the SW API and search based on the search term and iterate results
     def search(self, search_text):
@@ -60,8 +81,6 @@ class MerlinBot():
         self.output_message("Total cubes: " + str(cubes.Dataset.count()))
 
         return None
-
-    # general conversation
 
 
     # data questions
@@ -87,7 +106,7 @@ class MerlinBot():
         # check if there is a description of value if not use keywords
         if len(desc_check) > 5:
             self.output_message('The cube ' + str(title) + ' was last updated on ' + str(
-                last_update) + '. \nIt holds information on ' + desc + '.')
+                last_update) + '. \nGeneral description: ' + desc + '.')
 
         else:
             self.output_message('The cube ' + str(title) + ' was last updated on ' + str(
@@ -158,11 +177,9 @@ class MerlinBot():
                 filter = input('What would you like to filter this column to?')
                 df = df[df[dimension] == filter]
 
-        self.output_message(df.Data.sum())
+        self.output_message('The data you requested is: ' + str(df.Data.sum()))
 
         return None
-
-    # retrieve logic will be: list dimension options (groupby), ask for what value in each and return data
 
 if __name__ == '__main__':
     merlin = MerlinBot()
