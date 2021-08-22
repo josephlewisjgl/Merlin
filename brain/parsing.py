@@ -4,6 +4,8 @@ import spacy
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from ears.comparison_phrases import COMMANDS
+import regex
 
 word2vec = spacy.load('en_core_web_sm')
 
@@ -26,6 +28,20 @@ def compare_overlap(user_message, possible_response):
             similar_words += 1
     return similar_words
 
+def highest_score(command_scores):
+    scores = list(command_scores.values())
+    commands = list(command_scores.keys())
+    return commands[scores.index(max(scores))]
+
+def find_intent(response):
+    scores = {}
+    for command in COMMANDS:
+        score = compare_overlap(response, command)
+        scores[command] = score
+    chosen_command = highest_score(scores)
+    print(scores)
+    print(chosen_command)
+    return chosen_command[0]
 
 def extract_nouns(tagged_message):
     message_nouns = list()
@@ -40,3 +56,18 @@ def compute_similarity(tokens, category):
     for token in tokens:
         output_list.append([token.text, category.text, token.similarity(category)])
     return output_list
+
+def find_cube_ref(response):
+    cube_regex = re.compile('[a-zA-z]{4}[0-9]{4}')
+    matches = []
+    for token in response:
+        matches.append(re.findall(cube_regex, token))
+
+    cubes = []
+
+    for cube in matches:
+        if len(cube)>0:
+            cubes.append(cube)
+
+    return cubes
+
